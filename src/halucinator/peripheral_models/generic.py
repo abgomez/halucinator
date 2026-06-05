@@ -63,6 +63,18 @@ class HaltPeripheral(AvatarPeripheral):
         hal_stats.write_on_update('MMIO_read_addresses', hex(addr))
         hal_stats.write_on_update('MMIO_addresses', hex(addr))
         hal_stats.write_on_update('MMIO_addr_pc', (hex(addr), hex(pc), 'r'))
+        try:
+            from rehostscope.integration.halucinator_bridge import on_gap_mmio_fault
+            on_gap_mmio_fault(
+                address=addr,
+                access="read",
+                width=size,
+                pc=pc,
+                peripheral=self.name,
+                detail="HaltPeripheral MMIO read",
+            )
+        except Exception:
+            pass
         print("HALTING on MMIO READ")
         HaltPeripheral.infinite_loop()
 
@@ -73,6 +85,18 @@ class HaltPeripheral(AvatarPeripheral):
         hal_stats.write_on_update('MMIO_write_addresses', hex(addr))
         hal_stats.write_on_update('MMIO_addresses', hex(addr))
         hal_stats.write_on_update('MMIO_addr_pc', (hex(addr), hex(pc), 'w'))
+        try:
+            from rehostscope.integration.halucinator_bridge import on_gap_mmio_fault
+            on_gap_mmio_fault(
+                address=addr,
+                access="write",
+                width=size,
+                pc=pc,
+                peripheral=self.name,
+                detail="HaltPeripheral MMIO write",
+            )
+        except Exception:
+            pass
         print("HALTING on MMIO Write")
         HaltPeripheral.infinite_loop()
 

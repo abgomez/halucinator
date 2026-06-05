@@ -375,9 +375,11 @@ def interceptor(avatar: Any, message: Any) -> None:  # pylint: disable=unused-ar
         from rehostscope.integration.halucinator_bridge import (
             on_handler_enter,
             on_handler_exit,
+            on_execution_function_enter,
             on_intercept_hit,
         )
         on_intercept_hit(bp_info, pc, breakpoint_num)
+        on_execution_function_enter(bp_info, pc, breakpoint_num)
     intercept_result = False
     ret_value = None
     try:
